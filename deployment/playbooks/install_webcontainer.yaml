@@ -6,7 +6,7 @@
 - hosts: blogserver
   become: true
   vars_files:
-    - "{playbook_dir}}/../config_vars.yaml"
+    - "{{playbook_dir}}/../config_vars.yaml"
 
   tasks:
     - name: Start swag container with healthstatus

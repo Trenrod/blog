@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 const Previews = () => {
     const classes = useStyles();
     const history = useHistory();
-    const { previewFilterName } = useParams();
+    const { previewFilterName } = useParams<{ previewFilterName: string }>();
     const [topBlogs, setTopBlogs] = useState<BlogData[]>([]);
     useEffect(() => {
         const getData = async () => {

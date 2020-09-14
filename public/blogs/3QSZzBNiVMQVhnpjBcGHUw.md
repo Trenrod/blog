@@ -6,7 +6,8 @@
     "created": "2020-09-05T18:46:02.412000+00:00",
     "updated": null,
     "id": "3QSZzBNiVMQVhnpjBcGHUw",
-    "redditlink": "https://www.reddit.com/r/trenrodsblog/comments/is60pm/why_to_create_another_blog/"
+    "redditlink": "https://www.reddit.com/r/trenrodsblog/comments/ismqxy/why_to_create_another_blog/",
+    "githublink": "https://github.com/Trenrod/blog"
 }
 ```
 
@@ -78,8 +79,6 @@ note top of BLOG: This react web app\nyou are seeing
 ```
 ![overview](/images/3QSZzBNiVMQVhnpjBcGHUw_overview.svg)
 
-### TODOS
+### Source
+Checkout public git repo for setup and more details [LINK TO GITHUB](https://github.com/Trenrod/blog)
 
-- Create public git repo with a template of this project
-
-### TO BE CONTINUED

@@ -6,10 +6,10 @@ import yaml from 'js-yaml';
 import P5Wrapper from 'react-p5-wrapper';
 import { withResizeDetector } from 'react-resize-detector';
 import useResizeObserver from "../hooks/useResizeObserver";
-import { Box, Divider, IconButton, Typography } from "@material-ui/core";
+import { Box, Divider, IconButton, Link, makeStyles, Typography } from "@material-ui/core";
 import RedditIcon from '@material-ui/icons/Reddit';
+import GitHubIcon from '@material-ui/icons/GitHub';
 import moment from "moment";
-import { Link } from "react-router-dom";
 
 interface Props {
     value: string,
@@ -78,9 +78,16 @@ const BlogP5Wrapper = ({ sketchData }) => {
     );
 }
 
-// const AdaptiveBlogP5Wrapper = withResizeDetector(BlogP5Wrapper);
+const useStyles = makeStyles((theme) => ({
+    link: {
+        display: "flex",
+        alignSelf: "center",
+        color: theme.palette.primary.contrastText,
+    },
+}));
 
 const CodeBlock = (props: Props) => {
+    const classes = useStyles();
     const { language, value } = props;
 
     if (language === "meta") {
@@ -99,19 +106,30 @@ const CodeBlock = (props: Props) => {
                             : null
                         }
                     </Box>
-                    {data.redditlink
-
-                        ?
-                        <Box display="flex" alignContent="center">
-                            <Link to="" style={{ display: "flex", alignSelf: "center" }}>
-                                <Typography variant="caption">Comments</Typography>
-                            </Link>
-                            <Box padding="0.5rem">
-                                <RedditIcon fontSize="small"></RedditIcon>
+                    <Box display="flex" flexDirection="column">
+                        {data.githublink
+                            ? <Box display="flex" alignContent="center">
+                                <Box paddingRight="0.25rem">
+                                    <GitHubIcon fontSize="small"></GitHubIcon>
+                                </Box>
+                                <Link href={data.githublink} className={classes.link}>
+                                    <Typography variant="caption">Source</Typography>
+                                </Link>
                             </Box>
-                        </Box>
-                        : null
-                    }
+                            : null
+                        }
+                        {data.redditlink
+                            ? <Box display="flex" alignContent="center">
+                                <Box paddingRight="0.25rem">
+                                    <RedditIcon fontSize="small"></RedditIcon>
+                                </Box>
+                                <Link href={data.redditlink} className={classes.link}>
+                                    <Typography variant="caption">Comments</Typography>
+                                </Link>
+                            </Box>
+                            : null
+                        }
+                    </Box>
                 </Box>
                 <Divider style={{ marginBottom: "1rem" }}></Divider>
                 <ReactMarkdown source={mdData} ></ReactMarkdown >

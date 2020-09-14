@@ -43,11 +43,9 @@ Following files need to be created and configured
    ```
  - deployment/inventory.yaml
    ```yaml
-
+   website_url: [WEBSITE_HOSTNAME]
+   website_email: [YOUR EMAIL]
    ```
-
-
- - TODO
 
 ## Development
 
@@ -60,7 +58,6 @@ Following files need to be created and configured
     python3 blogposttools/main.py create
     ```
    - This returns the newly created blogpost which can be editet and viewed in the browser during development
- - Build and upload 
 
 ## Deployment
 - Build meta data

@@ -59,8 +59,6 @@ draw:
 
 ```
 
-
-
 ## FAQ
 
 ### But... why?
@@ -74,5 +72,4 @@ draw:
 ### Why does it look so "minimalistic", is something not loading?
 Everything is fine. It`s as it should be.
 
-#### to be continued ...
 
