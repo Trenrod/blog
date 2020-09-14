@@ -1,8 +1,8 @@
 ```meta
 {
-    "title": "Why to create another blog -  UNFINISHED",
+    "title": "Why to create another blog",
     "description": "Why and how I created this blog in detail",
-    "tag": "unfinished",
+    "tag": "generic",
     "created": "2020-09-05T18:46:02.412000+00:00",
     "updated": null,
     "id": "3QSZzBNiVMQVhnpjBcGHUw",
