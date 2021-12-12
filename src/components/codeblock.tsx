@@ -26,15 +26,22 @@ class SketchContainer {
     private setup?: string;
     private draw?: string;
     private size?: IUseWindowsSize;
+    private data?: any;
 
     constructor(sketchData: BlogP5WrapperProps, size: IUseWindowsSize) {
         this.preload = sketchData.preload;
         this.setup = sketchData.setup;
         this.draw = sketchData.draw;
         this.size = size;
+        this.data = null;
     }
 
     public sketch(p: any) {
+        // @ts-ignore @typescript-eslint/no-unused-vars
+        let data = {
+            size: this.size
+        };
+
         p.preload = () => {
             if (this.preload)
                 eval(this.preload)
