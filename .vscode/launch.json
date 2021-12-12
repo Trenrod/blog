@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch localhost",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "url": "http://localhost:3000/index.html",
+            "pathMappings": [
+                {
+                    "url": "http://localhost:3000/home/trenrod/dev/blog2/node_modules",
+                    "path": "${workspaceFolder}/node_modules"
+                },
+                {
+                    "url": "http://localhost:3000/home/trenrod/dev/blog2/src",
+                    "path": "${workspaceFolder}/src"
+                },
+                {
+                    "url": "http://localhost:3000",
+                    "path": "${workspaceFolder}"
+                }
+            ]
+        }
+    ]
+}
