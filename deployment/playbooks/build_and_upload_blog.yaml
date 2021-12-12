@@ -1,0 +1,21 @@
+# Sources:
+# https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-docker-on-ubuntu-18-04
+
+---
+- hosts: blogserver
+
+  tasks:
+
+    - set_fact:
+        build_path: "{{playbook_dir}}/../../build/"
+
+    - name: "Build new frontend version"
+      local_action: command /usr/bin/npm run build
+
+    - name: Copy file with owner and permissions
+      copy:
+        src: "{{build_path}}"
+        dest: "/etc/blogserver/config/www"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
