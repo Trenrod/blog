@@ -1,4 +1,4 @@
-# Source: 
+# Source:
 # - linuxserver/swag: https://docs.linuxserver.io/general/swag#creating-a-swag-container
 # - Ansible Docker: https://docs.ansible.com/ansible/latest/modules/docker_container_module.html
 
@@ -9,35 +9,97 @@
     - "{{playbook_dir}}/../config_vars.yaml"
 
   tasks:
-    - name: Start swag container with healthstatus
-      docker_container:
-        name: linuxserver-swag
-        image: linuxserver/swag
-        capabilities:
-          - "NET_ADMIN"
-        env:
-            PUID: "1000"
-            PGID: "1000"
-            TZ: "Europe/Berlin"
-            URL: "{{website_url}}"
-            SUBDOMAINS: "www,"
-            VALIDATION: "http"
-            EMAIL: "{{website_email}}"
-            DHLEVEL: "2048"
-            STAGING: "false"
-        exposed_ports:
-            - "443:443"
-            - "80:80"
+    - set_fact:
+        deployment_dir: "{{playbook_dir}}/../"
+        host_nginx_conf_dir: "/etc/nginx/"
+        docker_nginx_conf_dir: "/usr/share/nginx/"
+
+    - name: "Create nginx group"
+      ansible.builtin.group:
+        name: "nginx"
+        state: "present"
+
+    - name: "Create nginx user and add to group nginx"
+      ansible.builtin.user:
+        name: "nginx"
+        group: "nginx"
+
+    - name: "Create directory for nginx configurations"
+      ansible.builtin.file:
+        path: "{{item}}"
+        owner: "nginx"
+        group: "nginx"
+        mode: "0400"
+        state: "directory"
+      with_items:
+        - "{{host_nginx_conf_dir}}"
+        - "{{host_nginx_conf_dir}}conf.d/"
+        - "{{host_nginx_conf_dir}}www/"
+        - "{{host_nginx_conf_dir}}acme/"
+        - "{{host_nginx_conf_dir}}conf.d/certificates/"
+
+    - name: "Apply blog.conf for nginx"
+      ansible.builtin.template:
+        src: "{{deployment_dir}}/nginx/blog.conf.j2"
+        dest: "{{host_nginx_conf_dir}}conf.d/blog.conf"
+        owner: "nginx"
+        group: "nginx"
+        mode: "0400"
+      vars:
+        server_name: "{{website_url}}"
+        cert_dir: "{{host_nginx_conf_dir}}conf.d/certificates/"
+
+    - name: "Apply acme.conf for nginx"
+      ansible.builtin.template:
+        src: "{{deployment_dir}}/nginx/acme.conf.j2"
+        dest: "{{host_nginx_conf_dir}}conf.d/acme.conf"
+        owner: "nginx"
+        group: "nginx"
+        mode: "0400"
+
+    - name: "TODO: Start and configure nginx for certbot only"
+      community.docker.docker_container:
+        name: "nginx"
+        image: "nginx"
+        state: "present"
+        restart: yes
+        ports:
+          # Publish container 80 only for acme cert validation
+          - "80:80"
+          - "443:443"
         volumes:
-            /etc/blogserver/config:/config
-        state: started
-        restart_policy: "unless-stopped" 
-        network_mode: "host"
-        healthcheck:
-          # Check if nginx server is healthy by curl'ing the server.
-          # If this fails or timeouts, the healthcheck fails.
-          test: ["CMD", "curl", "--fail", "https://{{website_url}}"]
-          interval: 1m30s
-          timeout: 10s
-          retries: 3
-          start_period: 30s
+          - "{{host_nginx_conf_dir}}www/:{{docker_nginx_conf_dir}}html/:ro"
+          - "{{host_nginx_conf_dir}}conf.d/:{{docker_nginx_conf_dir}}conf.d/:ro"
+          - "{{host_nginx_conf_dir}}:{{docker_nginx_conf_dir}}acme/:ro"
+
+    # - name: Start swag container with healthstatus
+    #   docker_container:
+    #     name: nginx
+    #     image: nginx
+    #     capabilities:
+    #       - "NET_ADMIN"
+    #     env:
+    #       PUID: "1000"
+    #       PGID: "1000"
+    #       TZ: "Europe/Berlin"
+    #       URL: "{{website_url}}"
+    #       SUBDOMAINS: "www,"
+    #       VALIDATION: "http"
+    #       EMAIL: "{{website_email}}"
+    #       DHLEVEL: "2048"
+    #       STAGING: "false"
+    #     exposed_ports:
+    #       - "443:443"
+    #       - "80:80"
+    #     volumes: /etc/blogserver/config:/config
+    #     state: started
+    #     restart_policy: "unless-stopped"
+    #     network_mode: "host"
+    #     healthcheck:
+    #       # Check if nginx server is healthy by curl'ing the server.
+    #       # If this fails or timeouts, the healthcheck fails.
+    #       test: ["CMD", "curl", "--fail", "https://{{website_url}}"]
+    #       interval: 1m30s
+    #       timeout: 10s
+    #       retries: 3
+    #       start_period: 30s

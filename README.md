@@ -62,7 +62,7 @@ Following files need to be created and configured
 ## Deployment
 - Build meta data
    ```shell
-   python3 blogposttool/main.py buil
+   python3 blogposttool/main.py build
    ```
 - Build frontend and upload
    ```shell
